@@ -31,7 +31,7 @@ module mux2a1 (s, d0, y);
 	input logic [31:0] d0;
 	output logic [31:0] y;
 	
-	assign y = s ? !d0 : d0;
+	assign y = s ? ~d0: d0;
 	
 endmodule
 
@@ -52,15 +52,17 @@ module mux4a1 (a, b, c, d, sel, result);
 endmodule
 
 module alu_testbench ();
-	input [1:0] ALUControl;
-	input [31:0] A, B;
-	output [31:0] Result;
-	output [3:0] ALUFlags;
+	logic [1:0] ALUControl;
+	logic [31:0] A, B;
+	logic [31:0] Result;
+	logic [3:0] ALUFlags;
 	
-	alu alu (A, B, ALUControl, Result, ALUFlags);
+	alu alu(A, B, ALUControl, Result, ALUFlags);
 	
 	initial begin
-		
+		A = 32'h00000001;
+		B = 32'h00000001;
+		ALUControl = 2'b01;
 	end
 	
 endmodule
