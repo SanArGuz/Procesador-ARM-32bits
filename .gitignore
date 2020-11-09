@@ -1,5 +1,7 @@
 labPractice.qpf
 labPractice.qsf
+labPractice_nativelink_simulation.rpt
 /output_files
 /incremental_db
 /db
+/simulation
