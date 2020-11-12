@@ -14,6 +14,8 @@ module alu (A, B, ALUControl, Result, ALUFlags);
 	
 	mux4a1 mux4a1 (sum, sum, A & B, A | B, ALUControl, Result);
 	
+	flags flags(Result, cout, ALUControl, sum, A, B, ALUFlags);
+	
 endmodule
 
 module add32 (a, b, cin, sum, cout);
@@ -51,6 +53,23 @@ module mux4a1 (a, b, c, d, sel, result);
 		end
 endmodule
 
+
+module flags(result, cout, ALUControl, Sum, A, B, ALUFlags);
+	input logic [31:0] result, A, B, Sum;
+	input logic cout;
+	input logic [1:0] ALUControl;
+	output logic [3:0] ALUFlags;
+	
+	assign ALUFlags[3] = result[31] ? 1'b1 : 1'b0; //Negativo
+	
+	assign ALUFlags[2] = result ? 1'b0 : 1'b1; //Zero
+	
+	assign ALUFlags[1] = ~ALUControl[1] & cout; //Carry
+	
+	assign ALUFlags[0] = ~(A[31]^B[31]^ALUControl[0]) & (A[31]^Sum[31]) & ~ALUControl[1]; //Overflow
+	
+endmodule
+
 module alu_testbench ();
 	logic [1:0] ALUControl;
 	logic [31:0] A, B;
@@ -60,9 +79,85 @@ module alu_testbench ();
 	alu alu(A, B, ALUControl, Result, ALUFlags);
 	
 	initial begin
+		A = 32'h00000000;
+		B = 32'h00000000;
+		ALUControl = 2'b00;
+		#100;
+		
+		A = 32'h00000000;
+		B = 32'hFFFFFFFF;
+		ALUControl = 2'b00;
+		#100;
+		
+		A = 32'h00000001;
+		B = 32'hFFFFFFFF;
+		ALUControl = 2'b00;
+		#100;
+		
+		A = 32'h000000FF;
+		B = 32'h00000001;
+		ALUControl = 2'b00;
+		#100;
+		
+		A = 32'h00000000;
+		B = 32'h00000000;
+		ALUControl = 2'b01;
+		#100;
+		
+		A = 32'h00000000;
+		B = 32'hFFFFFFFF;
+		ALUControl = 2'b01;
+		#100;
+		
 		A = 32'h00000001;
 		B = 32'h00000001;
 		ALUControl = 2'b01;
+		#100;
+		
+		A = 32'h00000100;
+		B = 32'h00000001;
+		ALUControl = 2'b01;
+		#100;
+		
+		A = 32'hFFFFFFFF;
+		B = 32'hFFFFFFFF;
+		ALUControl = 2'b10;
+		#100;
+		
+		A = 32'hFFFFFFFF;
+		B = 32'h12345678;
+		ALUControl = 2'b10;
+		#100;
+		
+		A = 32'h12345678;
+		B = 32'h87654321;
+		ALUControl = 2'b10;
+		#100;
+		
+		A = 32'h00000000;
+		B = 32'hFFFFFFFF;
+		ALUControl = 2'b10;
+		#100;
+		
+		A = 32'hFFFFFFFF;
+		B = 32'hFFFFFFFF;
+		ALUControl = 2'b11;
+		#100;
+		
+		A = 32'h12345678;
+		B = 32'h87654321;
+		ALUControl = 2'b11;
+		#100;
+		
+		A = 32'h00000000;
+		B = 32'hFFFFFFFF;
+		ALUControl = 2'b11;
+		#100;
+		
+		A = 32'h00000000;
+		B = 32'h00000000;
+		ALUControl = 2'b11;
+		#100;
 	end
 	
 endmodule
