@@ -1,8 +1,8 @@
 module alu (A, B, ALUControl, Result, ALUFlags);
-	input logic [1:0] ALUControl;
-	input logic [31:0] A, B;
-	output logic [31:0] Result;
-	output logic [3:0] ALUFlags;
+				input  logic [1:0]  ALUControl;
+				input  logic [31:0] A, B;
+				output logic [31:0] Result;
+				output logic [3:0]  ALUFlags;
 	
 	wire [31:0] B_Temp;
 	wire [31:0] sum;
@@ -19,28 +19,28 @@ module alu (A, B, ALUControl, Result, ALUFlags);
 endmodule
 
 module add32 (a, b, cin, sum, cout);
-	input logic [31:0] a, b;
-	input logic cin;
-	output logic [31:0] sum;
-	output logic cout;
+				input  logic [31:0] a, b;
+				input  logic 		  cin;
+				output logic [31:0] sum;
+				output logic 		  cout;
 	
 	assign {cout, sum} = a + b + cin;
 	
 endmodule
 
 module mux2a1 (s, d0, y);
-	input logic s;
-	input logic [31:0] d0;
-	output logic [31:0] y;
+				input  logic 		  s;
+				input  logic [31:0] d0;
+				output logic [31:0] y;
 	
 	assign y = s ? ~d0: d0;
 	
 endmodule
 
 module mux4a1 (a, b, c, d, sel, result);
-	input logic [31:0] a,b,c,d;
-	input logic [1:0] sel;
-	output logic [31:0] result;
+				input  logic [31:0] a,b,c,d;
+				input  logic [1:0]  sel;
+				output logic [31:0] result;
 
 	always @(a or b or c or d or sel)
 		begin
@@ -55,10 +55,10 @@ endmodule
 
 
 module flags(result, cout, ALUControl, Sum, A, B, ALUFlags);
-	input logic [31:0] result, A, B, Sum;
-	input logic cout;
-	input logic [1:0] ALUControl;
-	output logic [3:0] ALUFlags;
+				input  logic [31:0] result, A, B, Sum;
+				input  logic 		  cout;
+				input  logic [1:0]  ALUControl;
+				output logic [3:0]  ALUFlags;
 	
 	assign ALUFlags[3] = result[31] ? 1'b1 : 1'b0; //Negativo
 	
@@ -71,10 +71,10 @@ module flags(result, cout, ALUControl, Sum, A, B, ALUFlags);
 endmodule
 
 module alu_testbench ();
-	logic [1:0] ALUControl;
-	logic [31:0] A, B;
-	logic [31:0] Result;
-	logic [3:0] ALUFlags;
+				logic [1:0]  ALUControl;
+				logic [31:0] A, B;
+				logic [31:0] Result;
+				logic [3:0]  ALUFlags;
 	
 	alu alu(A, B, ALUControl, Result, ALUFlags);
 	
